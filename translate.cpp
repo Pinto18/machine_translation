@@ -12,15 +12,14 @@ using namespace std;
 #define Z 90			// ASCII code for 'Z'
 #define a 97			// ASCII code for 'a'
 #define z 122			// ASCII code for 'z'
-#define LOWERCASE 32	// ASCII conversion for uppercase to lowercase
+#define LOWERCASE 32		// ASCII conversion for uppercase to lowercase
 
 void translateWord(string &word);
 void onlyAlphabetical(string &input);
 void toLowercase(string &input);
 void formatString(string &input);
 
-int main()
-{
+int main() {
 	ofstream output("output.txt");	// File to hold translated sentence
 	string input, line;
 
@@ -31,8 +30,7 @@ int main()
 	output << "Formatted: " << input << endl << "Spanish: ";
 	istringstream iss(input);	// Splits sentence into seperate words
 	string word;				// Used to hold an individual word
-	while(iss >> word)			//Loop through each word in the sentence
-	{
+	while(iss >> word) {			//Loop through each word in the sentence
 		translateWord(word);
 		output << word << " ";
 		cout << word << " ";
@@ -76,4 +74,5 @@ void toLowercase(string &input) {
 		if ((input[i] >= A) && (input[i] <= Z)) {		// Uppercase check
 			input[i] += LOWERCASE;						// Convert to lowercase
 		}
-	}}
+	}
+}
