@@ -15,8 +15,6 @@ using namespace std;
 #define LOWERCASE 32		// ASCII conversion for uppercase to lowercase
 
 void translateWord(string &word);
-void onlyAlphabetical(string &input);
-void toLowercase(string &input);
 void formatString(string &input);
 
 int main() {
@@ -56,23 +54,11 @@ void translateWord(string &word) {
 }
 
 void formatString(string &input) {
-	onlyAlphabetical(input);
-	toLowercase(input);
-}
-
-void onlyAlphabetical(string &input) {
-	for(string::size_type i = 0; i < input.size(); i++) {	// Iterate each char
-		if ( !(((input[i] >= A) && (input[i] <= Z)) ||		// Uppercase check
-			   ((input[i] >= a) && (input[i] <= z)))) {		// Lowercase check
-			input[i] = ' ';					// Replace character with a space
-		}
-	}
-}
-
-void toLowercase(string &input) {
 	for(string::size_type i = 0; i < input.size(); i++) {	// Iterate each char
 		if ((input[i] >= A) && (input[i] <= Z)) {		// Uppercase check
 			input[i] += LOWERCASE;						// Convert to lowercase
+		} else if (!((input[i] >= a) && (input[i] <= z))) { // Lowercase check
+			input[i] = ' ';					// Replace character with a space
 		}
 	}
 }
