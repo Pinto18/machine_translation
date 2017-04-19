@@ -1,1 +1,26 @@
-she:ella,is:es,smart:inteligente,the:el,boy:,ran:,down:,street:,he:,saw:,a:,man:,selling:,ice cream:,likes:,so:,bought:,an:,cone:,his:,mother:,was:,not:,happy:,about:,decision:
+she:ella
+is:es
+smart:inteligente
+the:el
+boy:muchacho
+ran:corrió
+down:por
+street:calle
+he:él
+saw:vío
+a:un
+man:hombre
+selling:viendendo
+ice-cream:helado
+likes:le gusta
+so:así
+bought:compró
+an:un
+cone:cono de
+his:su
+mother:madre
+was:estaba
+not:no
+happy:contenta
+about:con
+decision:decisión
