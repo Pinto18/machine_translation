@@ -9,12 +9,18 @@ function translateSentence() {
   var reader = new FileReader();
 
   reader.onload = function(e){
+  	//File IO///////////////////////////////////////////////////////
+  	console.time('File IO'); //start measuring length of time to complete File IO operations
   	var text = reader.result;
+  	console.timeEnd('File IO'); //stop measuring length of time to complete File IO operations
+  	////////////////////////////////////////////////////////////////
   	var userInput = document.getElementById("input").value;
     var output = formatSentences(userInput);
+    var likelihood = 0.0;
 
+    //String Manipulation/////////////////////////////////////////////////////
+    console.time('String Manipulation');  //start measuring length of time to complete string manipulation functions
     text = text.split(/:|\n/);  //using regex detection to split dictionary text file at new lines and commas
-
     for(var index = 0; index < output.length; index++){
   		output[index] = searchDictionary(output[index], text);
   		if (output[index]==null) {
@@ -22,9 +28,15 @@ function translateSentence() {
   			break;
   		}
     }
+    console.timeEnd('String Manipulation');  //stop measuring length of time to complete string manipulation functions
   	//output = switchWordPosition(output);
-  	userInput = formatSentences(userInput);
-  	var likelihood = calculateTranslationLikelihood(userInput, output);
+	///////////////////////////////////////////////////////////////////////// 
+
+	//Probability (AKA Floating Point Calculations)//////////////////////////
+	console.time('Floating Point Calculations');  //start measuring length of time to complete floating point operations
+  	likelihood = calculateTranslationLikelihood(userInput, output);
+  	console.timeEnd('Floating Point Calculations');  //stop measuring length of time to complete floating point operations
+  	/////////////////////////////////////////////////////////////////////////
   	output = output.join(" ");
   	document.getElementById("output").value = output;
   	console.log("Likelihood of translation = " + likelihood);
@@ -136,8 +148,9 @@ function calculateTranslationLikelihood(englishSentence, spanishSentence){
 	var englishCorpusWords = english_corpus.toLowerCase();
 	var spanishCorpusWords = spanish_corpus.toLowerCase();
 
-	//english bigram
 	englishCorpusWords = englishCorpusWords.split(/\.|\s+/);
+	englishSentence = formatSentences(englishSentence);
+	//english bigram
 	for(var index = 0; index < englishSentence.length; index++){
 		wordPairOccurence = 0.0; //resetting value for new word
 		wordOccurence = 0.0; //resetting value for new word
