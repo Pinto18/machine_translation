@@ -29,7 +29,6 @@ function translateSentence() {
   		}
     }
     console.timeEnd('String Manipulation');  //stop measuring length of time to complete string manipulation functions
-  	//output = switchWordPosition(output);
 	///////////////////////////////////////////////////////////////////////// 
 
 	//Probability (AKA Floating Point Calculations)//////////////////////////
@@ -61,78 +60,6 @@ function formatSentences(sentences){
 	var words = sentences.split(" ");
 	return words;
 }
-
-//The function below proved too complex and beyond the scope of this project
-/*function switchWordPosition(sentence){
-	//move a word in a sentence to its most likely position
-	console.log("Entered switchWordPosition function");
-	var index = 0
-	while(index < sentence.length){
-		console.log("Index = " + index);
-		var mostCommonPosition = findMostCommonPosition(sentence[index], sentence.length);
-		console.log("Most common position is " + mostCommonPosition);
-		if(mostCommonPosition == index){
-			index++;  //word is already in correct position so move on to the next word in the sentence
-			console.log("Word is in correct position");
-		}
-		else{
-			//perform a bubble sort to change word positions
-			console.log("Switching word positions");
-			var temp = sentence[mostCommonPosition];
-			sentence[mostCommonPosition] = sentence[index];
-			sentence[index] = temp;
-			console.log(sentence);
-			if(sentence[index] == sentence[mostCommonPosition]){
-				index++;  //helps break from infinite while loops.
-			}
-		}
-	}
-	return sentence;
-}
-
-function findMostCommonPosition(word, length){
-	console.log("Entered findMostCommonPosition function");
-	//find the most common position for a word from an english sentence in a spanish sentence
-  	var positions = [];
-  	var counter = {};
-  	var mode = [];
-  	var max = 0;
-  	//splitting sentences into 2D array of words
-  	var sampleSentences = spanish_corpus.toLowerCase()
-  	sampleSentences = sampleSentences.split(".");
-  	for(var index = 0; index < sampleSentences.length; index++){
-  		sampleSentences[index] = sampleSentences[index].split(" ");
-  	}
-
-  	for(var sentenceIndex = 0; sentenceIndex < sampleSentences.length; sentenceIndex++){
-  		for(var wordIndex = 0; wordIndex < sampleSentences[sentenceIndex].length; wordIndex++){
-  			if(word == sampleSentences[sentenceIndex][wordIndex]){
-  				positions.push(wordIndex);  //append the position for the word found in the sentence into an array
-  				console.log("positions = " + positions);
-  			}
-  		}
-  	}
-  	//find the mode of the possible positions for the word
-  	for(var i in positions){
-  		if (!(positions[i] in counter)) {
-  			counter[positions[i]] = 0;
-  		}
-  		counter[positions[i]]++;
-
-  		if (counter[positions[i]] == max) {
-  			mode.push(positions[i]);
-  		}
-  		else if (counter[positions[i]] > max) {
-  			max = counter[positions[i]];
-  			mode = [positions[i]];
-  		}
-  	}
-  	console.log("Mode is: " + mode);
-  	if(mode.length > 1){
-  		return mode[0];
-  	}
-  	return mode;
-}  */
 
 function calculateTranslationLikelihood(englishSentence, spanishSentence){
 	//calculate probability of sentence using bigram model
@@ -176,35 +103,6 @@ function calculateTranslationLikelihood(englishSentence, spanishSentence){
 		englishBigramProbability = wordPairOccurence/wordOccurence;
 		totalEnglishBigramProbability = totalEnglishBigramProbability * englishBigramProbability;
 	}
-
-	//spanish bigram
-	//this algorithm is also likely to return zero due to sample size and weak translations in our dictionary text file
-	/*spanishCorpusWords = spanish_corpus.split(/\.|\s+/);
-	for(var index = 0; index < spanishSentence.length; index++){
-		wordPairOccurence = 0.0;  //resetting value for new word
-		wordOccurence = 0.0;  //resetting value for new word
-		for(var corpusIndex = 0; corpusIndex < spanishCorpusWords.length; corpusIndex++){
-			//examining the number of times a word in the outputted sentence appears in the spanish corpus
-			if((index != 0) && (corpusIndex != 0) && (spanishSentence[index - 1] == spanishCorpusWords[corpusIndex - 1])){
-				wordOccurence++;
-			}
-			else if((index == 0) && (spanishSentence[index] == spanishCorpusWords[corpusIndex])){
-				wordOccurence++;  //case where we are examining the first word in the sentence from the translation output
-			}
-			//examining the number of word pairs that occur between the word being examined and the previous word
-			if((index == 0) && (corpusIndex == 0) && (spanishSentence[index] == spanishCorpusWords[corpusIndex])){
-				wordPairOccurence++; //case where the first elements of the translated sentence and the spanish corpus match
-			}
-			else if((index == 0) && (corpusIndex != 0) && (spanishSentence[index] == spanishCorpusWords[corpusIndex]) && (spanishCorpusWords[corpusIndex - 1] == "")){
-				wordPairOccurence++;  //case where we are examinging the word pair associated with the first word in a sentence (the word itself and nothing)
-			}
-			else if((index != 0) && (corpusIndex != 0) && (spanishSentence[index] == spanishCorpusWords[corpusIndex]) && (spanishSentence[index - 1] == spanishCorpusWords[corpusIndex - 1])){
-				wordPairOccurence++;
-			}
-		}
-		spanishBigramProbability = wordPairOccurence/wordOccurence;
-		totalSpanishBigramProbability = totalSpanishBigramProbability * spanishBigramProbability;
-	}*/
 	//due to sample size, this calculation always returns a zero
 	//calculate distortion probability
 	var sampleSentences = spanish_corpus.toLowerCase();
