@@ -19,6 +19,7 @@ void formatString(string &input);
 float translationLikelihood(string english, string spanish);
 
 int main() {
+<<<<<<< HEAD
     ofstream output("output.txt");	// File to hold translated sentence
     string input, line, test;
     //float likelihood;
@@ -40,6 +41,30 @@ int main() {
     istringstream spanishSent(test);
     cout << translationLikelihood(input, test);
     output.close();
+=======
+	ofstream output("output.txt");	// File to hold translated sentence
+	string input, line, translated;
+	float likelihood;
+
+	cout << "Enter a sentence in English: ";
+	getline(cin, input);
+	output << endl << "English: " << input << endl;
+	formatString(input);
+	output << "Formatted: " << input << endl << "Spanish: ";
+	istringstream iss(input);	// Splits sentence into seperate words
+	string word;				// Used to hold an individual word
+	while(iss >> word) {			//Loop through each word in the sentence
+		translateWord(word);
+		output << word << " ";
+		translated += word;
+		translated += " ";
+	}
+	istringstream spanishSent(translated);
+	likelihood = translationLikelihood(input, translated);
+	output << endl << "Likelihood: " << likelihood*100 << "%";
+	output.close();
+	cout << "Saved to 'output.txt'";
+>>>>>>> 8913fa2dff757f2d1583f23d6c136fa18fd18f58
 }
 
 void translateWord(string &word) {
@@ -163,4 +188,102 @@ float translationLikelihood(string english, string spanish) {
     
     
     return distortionProbability * englishBigramProbability;  //return
+}
+
+float translationLikelihood(string english, string spanish) {
+	ifstream englishCorpusFile("english_corpus.txt");
+	string englishCorpus;
+	formatString(englishCorpus);
+	istringstream englishCorpusSentence;
+	istringstream englishSentence(english);
+	string englishSentenceWord;
+	string prevEnglishSentenceWord = "";
+	string englishCorpusWord;
+	string prevEnglishenglishCorpusWord = "";
+
+	int wordPairOccurence;
+	int wordOccurence;
+	float englishBigramProbability = 1;
+
+	//english bigram
+	while (getline(englishCorpusFile, englishCorpus)) {
+		formatString(englishCorpus);
+		englishCorpusSentence.str(englishCorpus);
+
+		while (englishSentence >> englishSentenceWord) {
+			wordPairOccurence = 0; //resetting value for new word
+			wordOccurence = 0; //resetting value for new word
+			while (englishCorpusSentence >> englishCorpusWord){
+				//examining the number of times a word in the inputted sentence appears in the english corpus
+				if(englishCorpusWord == englishSentenceWord) {
+					wordOccurence++;
+					if(prevEnglishenglishCorpusWord == prevEnglishSentenceWord) {
+						wordPairOccurence++;
+					}
+				}
+
+				prevEnglishenglishCorpusWord = englishCorpusWord;
+			}
+
+			prevEnglishSentenceWord = englishSentenceWord;
+			prevEnglishenglishCorpusWord = "";
+			englishCorpusSentence.clear();
+			if (wordOccurence != 0) {
+				englishBigramProbability *= ((float)wordPairOccurence/(float)wordOccurence);
+			}
+		}
+
+		prevEnglishSentenceWord = "";
+		englishCorpusSentence.clear();
+	}
+
+
+	ifstream spanishCorpusFile("spanish_corpus.txt");
+	string spanishCorpus;
+	getline(spanishCorpusFile, spanishCorpus);
+	formatString(spanishCorpus);
+	istringstream spanishCorpusSentence(spanishCorpus);
+	istringstream spanishSentence(spanish);
+	string spanishSentenceWord;
+	string spanishCorpusWord;
+
+	int samePositionOccurence;
+	int sameWordOccurence;
+	float distortionProbability = 1.0;
+
+
+  	while(getline(spanishCorpusFile, spanishCorpus)){
+  		formatString(spanishCorpus);
+		spanishCorpusSentence.str(spanishCorpus);
+
+ 		samePositionOccurence = 0;
+  		sameWordOccurence = 0;
+
+		while ((spanishCorpusSentence >> spanishCorpusWord) && (spanishSentence >> spanishSentenceWord)) {
+			if(spanishCorpusWord == spanishSentenceWord) {
+				samePositionOccurence++;
+			}
+		}
+
+		spanishCorpus.clear();
+		spanishSentence.clear();
+
+		while(spanishSentence >> spanishSentenceWord) {
+			while(spanishCorpusSentence >> spanishCorpusWord) {
+				if(spanishSentenceWord == spanishCorpusWord) {
+					sameWordOccurence++;
+				}
+			}
+		}
+
+		spanishSentence.clear();
+		spanishCorpusSentence.clear();
+
+		if(sameWordOccurence != 0) {
+			distortionProbability *= (samePositionOccurence / sameWordOccurence);
+		}
+	}
+
+
+	return distortionProbability * englishBigramProbability;  //return
 }
