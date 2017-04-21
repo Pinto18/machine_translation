@@ -111,8 +111,6 @@ function calculateTranslationLikelihood(englishSentence, spanishSentence){
 	for(var index = 0; index < sampleSentences.length; index++){
   		sampleSentences[index] = sampleSentences[index].split(" "); //splitting sentences into 2D array of words
   	}
-
-
   	for(var index = 0; index < spanishSentence.length; index++){
  		samePositionOccurence = 0.0;
   		sameWordOccurence = 0.0;
