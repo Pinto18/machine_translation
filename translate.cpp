@@ -6,6 +6,7 @@
 #include<sstream>
 #include<fstream>
 #include<string>
+#include<ctime>
 using namespace std;
 
 #define A 65			// ASCII code for 'A'
@@ -14,34 +15,18 @@ using namespace std;
 #define z 122			// ASCII code for 'z'
 #define LOWERCASE 32		// ASCII conversion for uppercase to lowercase
 
+clock_t mathStart;
+float mathTime = 0;
+clock_t stringStart;
+double stringTime = 0;
+clock_t fileStart;
+double fileTime = 0;
+
 void translateWord(string &word);
 void formatString(string &input);
 float translationLikelihood(string english, string spanish);
 
 int main() {
-<<<<<<< HEAD
-    ofstream output("output.txt");	// File to hold translated sentence
-    string input, line, test;
-    //float likelihood;
-    
-    cout << "Enter an English sentence: ";
-    input = "The boy";
-    cout << "English: " << input << endl;
-    formatString(input);
-    cout << "Formatted: " << input << endl << "Spanish: ";
-    istringstream iss(input);	// Splits sentence into seperate words
-    string word;				// Used to hold an individual word
-    while(iss >> word) {			//Loop through each word in the sentence
-        //translateWord(word);
-        output << word << " ";
-        test += word;
-        test += " ";
-        cout << word << " ";
-    }
-    istringstream spanishSent(test);
-    cout << translationLikelihood(input, test);
-    output.close();
-=======
 	ofstream output("output.txt");	// File to hold translated sentence
 	string input, line, translated;
 	float likelihood;
@@ -49,145 +34,58 @@ int main() {
 	cout << "Enter a sentence in English: ";
 	getline(cin, input);
 	output << endl << "English: " << input << endl;
+	stringStart = clock();
 	formatString(input);
+	stringTime += (clock() - stringStart) / (double) CLOCKS_PER_SEC;
 	output << "Formatted: " << input << endl << "Spanish: ";
 	istringstream iss(input);	// Splits sentence into seperate words
 	string word;				// Used to hold an individual word
+	fileStart = clock();
 	while(iss >> word) {			//Loop through each word in the sentence
 		translateWord(word);
 		output << word << " ";
 		translated += word;
 		translated += " ";
 	}
+	fileTime += (clock() - fileStart) / (double) CLOCKS_PER_SEC;
 	istringstream spanishSent(translated);
+	mathStart = clock();
 	likelihood = translationLikelihood(input, translated);
+	mathTime = (clock() - mathStart) / (float) CLOCKS_PER_SEC;
 	output << endl << "Likelihood: " << likelihood*100 << "%";
+	output << endl << "Math Time: " << mathTime << " seconds";
+	output << endl << "String Time: " << stringTime << " seconds";
+	output << endl << "File Time: " << fileTime << " seconds";
 	output.close();
 	cout << "Saved to 'output.txt'";
->>>>>>> 8913fa2dff757f2d1583f23d6c136fa18fd18f58
 }
 
 void translateWord(string &word) {
-    ifstream dictionary("translation.txt");		// English to Spanish text file
-    char delimeter = ':';
-    string line, english_token, spanish_token;
-    
-    while(getline(dictionary, line)) {
-        english_token = line.substr(0, line.find(delimeter));
-        spanish_token = line.substr(line.find(delimeter) + 1, line.find("\n"));
-        if(word.compare(english_token) == 0) {	// Word is found in dictionary
-            dictionary.close();
-            word = spanish_token;	// Replace with the Spanish translation
-            break;
-        }
-    }
-    
+
+	ifstream dictionary("translation.txt");		// English to Spanish text file
+	char delimeter = ':';
+	string line, english_token, spanish_token;
+
+	while(getline(dictionary, line)) {
+		english_token = line.substr(0, line.find(delimeter));
+		spanish_token = line.substr(line.find(delimeter) + 1, line.find("\n"));
+		if(word.compare(english_token) == 0) {	// Word is found in dictionary
+			dictionary.close();
+			word = spanish_token;	// Replace with the Spanish translation
+			break;
+		}
+	}
+
 }
 
 void formatString(string &input) {
-    for(string::size_type i = 0; i < input.size(); i++) {	// Iterate each char
-        if ((input[i] >= A) && (input[i] <= Z)) {		// Uppercase check
-            input[i] += LOWERCASE;						// Convert to lowercase
-        } else if (!((input[i] >= a) && (input[i] <= z))) { // Lowercase check
-            input[i] = ' ';					// Replace character with a space
-        }
-    }
-}
-
-float translationLikelihood(string english, string spanish) {
-    cout << "2";
-    
-    ifstream englishCorpusFile("english_corpus.txt");
-    string englishCorpus;
-    getline(englishCorpusFile, englishCorpus);
-    formatString(englishCorpus);
-    istringstream englishCorpusSentence(englishCorpus);
-    istringstream englishSentence(english);
-    string englishSentenceWord;
-    string prevEnglishSentenceWord = "";
-    string englishCorpusWord;
-    string prevEnglishenglishCorpusWord = "";
-    
-    float wordPairOccurence;
-    float wordOccurence;
-    float englishBigramProbability = 1;
-    
-    cout << "1";
-    
-    //english bigram
-    while (englishCorpusSentence) {
-        while (englishSentence >> englishSentenceWord) {
-            wordPairOccurence = 0.0; //resetting value for new word
-            wordOccurence = 0.0; //resetting value for new word
-            while (englishCorpusSentence >> englishCorpusWord){
-                //examining the number of times a word in the inputted sentence appears in the english corpus
-                if(englishCorpusWord == englishSentenceWord) {
-                    wordOccurence++;
-                    if(prevEnglishenglishCorpusWord == prevEnglishSentenceWord) {
-                        wordPairOccurence++;
-                    }
-                }
-                
-                prevEnglishenglishCorpusWord = englishCorpusWord;
-            }
-            
-            prevEnglishSentenceWord = englishSentenceWord;
-            prevEnglishenglishCorpusWord = "";
-            englishCorpusSentence.clear();
-            englishBigramProbability *= (wordPairOccurence/wordOccurence);
-        }
-        
-        prevEnglishSentenceWord = "";
-        getline(englishCorpusFile, englishCorpus);
-        englishCorpusSentence.str(englishCorpus);
-        englishCorpusSentence.clear();
-    }
-    
-    ifstream spanishCorpusFile("spanish_corpus.txt");
-    string spanishCorpus;
-    getline(spanishCorpusFile, spanishCorpus);
-    formatString(spanishCorpus);
-    istringstream spanishCorpusSentence(spanishCorpus);
-    istringstream spanishSentence(spanish);
-    string spanishSentenceWord;
-    string spanishCorpusWord;
-    
-    float samePositionOccurence;
-    float sameWordOccurence;
-    float distortionProbability = 1.0;
-    
-    
-    while(spanishCorpusSentence){
-        samePositionOccurence = 0.0;
-        sameWordOccurence = 0.0;
-        
-        while ((spanishCorpusSentence >> spanishCorpusWord) && (spanishSentence >> spanishSentenceWord)) {
-            if(spanishCorpusWord == spanishSentenceWord) {
-                samePositionOccurence++;
-            }
-        }
-        
-        spanishCorpus.clear();
-        spanishSentence.clear();
-        
-        while(spanishSentence >> spanishSentenceWord) {
-            while(spanishCorpusSentence >> spanishCorpusWord) {
-                if(spanishSentenceWord == spanishCorpusWord) {
-                    sameWordOccurence++;
-                }
-            }
-        }
-        
-        spanishSentence.clear();
-        getline(spanishCorpusFile, spanishCorpus);
-        spanishCorpusSentence.str(spanishCorpus);
-        spanishCorpusSentence.clear();
-        
-        distortionProbability *= (samePositionOccurence / sameWordOccurence);
-    }
-    
-    
-    return distortionProbability * englishBigramProbability;  //return
+	for(string::size_type i = 0; i < input.size(); i++) {	// Iterate each char
+		if ((input[i] >= A) && (input[i] <= Z)) {		// Uppercase check
+			input[i] += LOWERCASE;						// Convert to lowercase
+		} else if (!((input[i] >= a) && (input[i] <= z))) { // Lowercase check
+			input[i] = ' ';					// Replace character with a space
+		}
+	}
 }
 
 float translationLikelihood(string english, string spanish) {
@@ -234,7 +132,8 @@ float translationLikelihood(string english, string spanish) {
 		}
 
 		prevEnglishSentenceWord = "";
-		englishCorpusSentence.clear();
+		englishSentence.str(english);
+		englishSentence.clear();
 	}
 
 
