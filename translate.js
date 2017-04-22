@@ -100,8 +100,10 @@ function calculateTranslationLikelihood(englishSentence, spanishSentence){
 				wordPairOccurence++;
 			}
 		}
-		englishBigramProbability = wordPairOccurence/wordOccurence;
-		totalEnglishBigramProbability = totalEnglishBigramProbability * englishBigramProbability;
+		if (wordOccurence != 0) {
+			englishBigramProbability = wordPairOccurence/wordOccurence;
+			totalEnglishBigramProbability = totalEnglishBigramProbability * englishBigramProbability;
+		}
 	}
 	//due to sample size, this calculation always returns a zero
 	//calculate distortion probability
@@ -124,8 +126,10 @@ function calculateTranslationLikelihood(englishSentence, spanishSentence){
   				sameWordOccurence++;
 			}
   		}
-  		distortionProbability = samePositionOccurence / sameWordOccurence;
-  		totalDistortionProbability = totalDistortionProbability * distortionProbability;
+  		if(sameWordOccurence !=0){
+  			distortionProbability = samePositionOccurence / sameWordOccurence;
+  			totalDistortionProbability = totalDistortionProbability * distortionProbability;
+  		}
 	}
 
 

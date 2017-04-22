@@ -1,0 +1,8 @@
+
+English: The boy ran down the street.
+Formatted: the boy ran down the street 
+Spanish: el muchacho corrió por el calle 
+Likelihood: 50%
+Math Time: 0.0002 seconds
+String Time: 5e-06 seconds
+File Time: 0.000315 seconds
